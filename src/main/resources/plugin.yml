@@ -1,0 +1,87 @@
+name: LavaCore
+version: ${project.version}
+main: cc.lavacast.lavacore.LavaCore
+api-version: '1.21'
+authors: [sixhes, danimania]
+description: Core plugin for lavacast.cc (fork of AnarchyCore by danimania)
+website: https://lavacast.cc
+softdepend: [PlaceholderAPI]
+
+commands:
+  help:
+    description: Shows the help menu
+    usage: /help
+  bed:
+    description: Shows where your respawn point is
+    usage: /bed
+  discord:
+    description: Shows the Discord invite
+    usage: /discord
+  stats:
+    description: Shows server info
+    usage: /stats
+  joindate:
+    description: Shows when you or another player first joined
+    usage: /joindate [player]
+  ping:
+    description: Shows your ping or someone else's
+    usage: /ping [player]
+  toggledeathmsgs:
+    description: Hides or shows death messages
+    usage: /toggledeathmsgs
+  togglejoinmsgs:
+    description: Hides or shows join and leave messages
+    usage: /togglejoinmsgs
+  corereload:
+    description: Reloads the LavaCore config
+    usage: /corereload
+    aliases: [lavacorereload]
+  kill:
+    description: Kills you
+    usage: /kill
+  nc:
+    description: Changes your name color in chat
+    usage: /nc <color> [format...] | /nc reset
+  mute:
+    description: Hides a player's chat messages from you
+    usage: /mute <player>
+  unmute:
+    description: Shows a muted player's chat messages again
+    usage: /unmute <player>
+  mutelist:
+    description: Lists the players you muted
+    usage: /mutelist
+  msg:
+    description: Privately messages a player
+    usage: /msg <player> <message>
+    aliases: [tell, w, whisper, m, pm]
+  reply:
+    description: Replies to the last player you messaged
+    usage: /r <message>
+    aliases: [r]
+
+permissions:
+  lavacore.nc:
+    description: Use /nc colors
+    default: true
+  lavacore.nc.format:
+    description: Use /nc formats (bold, italic, magic, underline, strike)
+    default: op
+  lavacore.reload:
+    description: Use /corereload
+    default: op
+  lavacore.bypasswhitelist:
+    description: Bypass the command whitelist
+    default: op
+  lavacore.bypassillegals:
+    description: Bypass the illegal item check and 32k patch
+    default: op
+  lavacore.bypassblocks:
+    description: Place blocked blocks like bedrock
+    default: op
+  lavacore.bypassspam:
+    description: Skip the chat antispam
+    default: op
+  lavacore.bypassnether:
+    description: Go on the nether roof and below the nether floor
+    default: op

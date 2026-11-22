@@ -1,0 +1,313 @@
+# LavaCore, core plugin for lavacast.cc
+# Fork of AnarchyCore by danimania (https://github.com/banimania/AnarchyCore)
+#
+# Colors use & codes (&a, &l, ...) and hex as &#rrggbb.
+# Player data (mutes, name colors, toggles) lives in data.yml, not here.
+
+global:
+  prefix: "&f[&c&lLavaCore&f] "
+  no-permission-message: "&cYou're not allowed to do this!"
+  players-only-message: "&cOnly players can use this."
+
+# Normal players can only run commands on this list. Ops and anyone with
+# lavacore.bypasswhitelist skip it. Namespaced commands (minecraft:kill,
+# lavacore:help, ...) are always blocked for normal players.
+# Non-whitelisted commands are also hidden from tab completion.
+command-whitelist:
+  enabled: true
+  whitelist-message: "&fUnknown command. Type \"/help\" for help."
+  whitelisted-commands:
+    - "help"
+    - "tps"
+    - "mute"
+    - "unmute"
+    - "mutelist"
+    - "msg"
+    - "tell"
+    - "w"
+    - "whisper"
+    - "m"
+    - "pm"
+    - "r"
+    - "reply"
+    - "togglemsgs"
+    - "togglejoinmsgs"
+    - "togglechat"
+    - "toggledeathmsgs"
+    - "stats"
+    - "kill"
+    - "ping"
+    - "bed"
+    - "joindate"
+    - "dmt"
+    - "discord"
+    - "nc"
+
+# Set any to false to disable that command (it replies with the whitelist message).
+enabled-commands:
+  help: true
+  bed: true
+  discord: true
+  stats: true
+  joindate: true
+  ping: true
+  toggledeathmsgs: true
+  togglejoinmsgs: true
+  corereload: true
+  kill: true
+  nc: true
+  mute: true
+  unmute: true
+  mutelist: true
+  msg: true
+  reply: true
+
+# Server list MOTD, one is picked at random. \n is a new line.
+motd:
+  enabled: true
+  motd-list:
+    - "&c&llavacast.cc\n&7no rules, no resets"
+    - "&c&llavacast.cc\n&7anarchy since day one"
+
+# show: 1 = first join only, 2 = every join, 3 = never
+welcome-message:
+  show: 1
+  message: "&bWelcome &6<player> &bto lavacast.cc! There are &6<connected>/<maxplayers> &bplayers online. Use /help for commands."
+
+links:
+  discord: "https://discord.gg/V6u4E3wVm5"
+  discord-message: "&6Join our Discord server: &c"
+
+join-messages:
+  # Turn off to leave join/leave messages vanilla (or to another plugin).
+  enabled: true
+  join: "&7<player> joined the game"
+  leave: "&7<player> left the game"
+  muted: "&bYou won't see join/leave messages anymore."
+  unmuted: "&bYou will see join/leave messages again."
+
+# /mute only hides chat from YOU. Mutes are saved and survive restarts.
+mute-command:
+  usage: "&bUsage: /mute <player>"
+  unmute-usage: "&bUsage: /unmute <player>"
+  muted: "&bMuted &c<player>&b. You won't see their chat anymore."
+  already-muted: "&c<player> &bis already muted."
+  unmuted: "&bUnmuted &c<player>&b."
+  not-muted: "&c<player> &bisn't muted."
+  not-found: "&bThat player has never joined."
+  self: "&bYou can't mute yourself."
+  list: "&bMuted players (&6<count>&b): &7<list>"
+  list-empty: "&bYou haven't muted anyone."
+
+# 2b2t style colored chat. A message starting with the prefix gets the color.
+greentext:
+  enabled: true
+  prefix: ">"
+  color: "&a"
+orangetext:
+  enabled: true
+  prefix: "<"
+  color: "&6"
+
+# Chat antispam (ops and lavacore.bypassspam skip it). Each check can be turned off on its own.
+antispam:
+  enabled: true
+  # Minimum time between two messages.
+  cooldown:
+    enabled: true
+    seconds: 1.5
+  # At most max-messages messages within per-seconds seconds.
+  burst:
+    enabled: true
+    max-messages: 5
+    per-seconds: 10
+  blocked-message: "&cYou're sending messages too fast."
+  # Every blocked message is a strike. Getting blocked again within strike-window-seconds
+  # of the last block adds another strike. Reaching "strikes" kicks.
+  # With the defaults: first block = warning, blocked again within 5 seconds = kick.
+  kick:
+    enabled: true
+    strikes: 2
+    strike-window-seconds: 5
+    message: "&cKicked for spamming."
+
+# /msg (aliases tell, w, whisper, m, pm) and /r (/reply).
+whispers:
+  # If someone you /mute messages you, you don't get it (they aren't told).
+  blocked-by-mute: false
+  sent: "&dTo <player>: "
+  received: "&d<player> whispers: "
+  message-color: "&d"
+  usage: "&bUsage: /msg <player> <message>"
+  reply-usage: "&bUsage: /r <message>"
+  not-online: "&bThat player isn't online."
+  self: "&bYou can't message yourself."
+  no-reply: "&bYou have nobody to reply to."
+
+# 2b2t style death messages. Uses the vanilla death message (so every death
+# type works and item names keep their hover) but recolors each part.
+# Set a color to "" to keep vanilla coloring for that part.
+death-messages:
+  # Turn off to leave death messages fully vanilla.
+  enabled: true
+  text-color: "&4"
+  victim-color: "&b"
+  killer-color: "&b"
+  weapon-color: "&6"
+  muted: "&bYou won't see death messages anymore."
+  unmuted: "&bYou will see death messages again."
+
+# Random spawn for first joins and for deaths without a bed/anchor.
+# Only spawns on solid ground with 2 free blocks above it: never in water,
+# lava, leaves, inside blocks, on cactus/magma/campfires, etc.
+random-spawn:
+  enabled: true
+  world-name: "world"
+  minX: -500
+  minZ: -500
+  maxX: 500
+  maxZ: 500
+  # How many random spots to try before falling back to the world spawn.
+  attempts: 50
+
+# Auto restart. method "restart" uses spigot.yml's restart-script and just
+# stops the server if that script doesn't exist. "shutdown" always just stops.
+# Either way your host/panel has to bring the server back up.
+auto-restart:
+  enabled: true
+  # Restart this many hours after the server starts.
+  interval-hours: 24
+  # Or restart every day at a fixed time instead, like "05:00". Leave "" to use interval-hours.
+  daily-time: ""
+  # Time zone for daily-time, like "America/Los_Angeles". "" = server time zone.
+  timezone: ""
+  method: "restart"
+  # Seconds before the restart to warn at.
+  warnings: [3600, 1800, 900, 600, 300, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1]
+  warning-message: "&4[SERVER] &cRestarting in &6<time>&c."
+  kick-message: "&cServer is restarting. Rejoin in a minute!"
+
+help-command:
+  - "&5---------------------------------------------------"
+  - "&6/mute &7- hides a player's chat from you."
+  - "&6/unmute &7- unhides a player's chat."
+  - "&6/mutelist &7- lists players you muted."
+  - "&6/msg &7- messages a player."
+  - "&6/r &7- replies to your last message."
+  - "&6/toggledeathmsgs &7- toggles death messages."
+  - "&6/togglejoinmsgs &7- toggles join/leave messages."
+  - "&6/kill &7- kills you."
+  - "&6/ping &7- shows your ping."
+  - "&6/bed &7- shows your respawn point."
+  - "&6/joindate &7- shows when someone first joined."
+  - "&6/stats &7- shows info about the server."
+  - "&6/discord &7- shows our Discord."
+  - "&6/nc &7- changes your name color in chat."
+  - "&5---------------------------------------------------"
+
+# /stats. Placeholders:
+#   <server-name>, <created> (creation date), <days> (days since creation),
+#   <world-size> (all worlds combined), <total-players> (everyone who ever joined),
+#   <online>, <restart> (time until next restart), <discord>, <player>
+stats:
+  server-name: "lavacast.cc"
+  # When the server was made, like "2026-11-01". Leave "" to use the first time anyone joined.
+  created-date: ""
+  # Java date format for <created>.
+  date-format: "MM/dd/yyyy"
+  # World size and player count are recalculated this often, since measuring the world is slow.
+  refresh-minutes: 10
+
+stats-command:
+  - "&6----------------------------------------------"
+  - "&3<server-name> was created on <created>. That was <days> days ago."
+  - "&3The world is <world-size>."
+  - "&3A total of <total-players> players have joined."
+  - "&6----------------------------------------------"
+
+bed-command:
+  message-bed: "&3Your respawn point is at &6x<x>&3, &6y<y>&3, &6z<z>&3 in &6<world>&3."
+  message-nobed: "&3You don't have a respawn point set."
+
+nc-command:
+  usage-message: "&7Use /nc <color> [format...] or /nc reset.\nColors: &0black&7, &1darkblue&7, &2darkgreen&7, &3darkaqua&7, &4darkred&7, &5darkpurple&7, &6gold&7, &7gray&7, &8darkgray&7, &9blue&7, &agreen&7, &baqua&7, &cred&7, &dlightpurple&7, &eyellow&7, &fwhite&7.\nFormats: &lbold&7, &kIII&r&7 magic, &nunderline&7, &mstrike&7, &oitalic&7."
+  error-message: "&cUnknown color or format: &6<arg>"
+  success-message: "&7Your name now looks like this: <preview>"
+  reset-message: "&7Your name color has been reset."
+
+core-reload:
+  message-reload: "&3LavaCore config reloaded."
+
+ping:
+  ping-msg: "&bYour ping is &6&l<ping>ms&r&b."
+  ping-other: "&b<p>'s ping is &6&l<ping>ms&r&b."
+  ping-notonline: "&bThat player isn't online."
+
+joindate:
+  # Java date format
+  date-format: "EEEE, d MMMM yyyy - HH:mm:ss z"
+  joindate-msg: "&bYou first joined on &6&l<jd>"
+  joindate-other: "&b<p> first joined on &6&l<jd>"
+  joindate-notfound: "&bThat player has never joined."
+
+# Nether roof and bottom limits for normal players (ops bypass).
+# Works on any world with the nether environment.
+# mode: teleport = moved to the nearest safe spot inside the nether
+#       kill     = killed
+#       free     = allowed, same as enabled: false
+antinetherroof:
+  enabled: true
+  mode: teleport
+  disabled-message: "&cThe nether roof is disabled."
+  # Feet at or above this Y counts as being on the roof.
+  max-y-level: 127
+
+antinetherbottom:
+  enabled: true
+  mode: teleport
+  disabled-message: "&cThe nether bottom is disabled."
+  # Feet below this Y counts as being under the floor.
+  min-y-level: 1
+
+# Stops dispensers firing out of the top/bottom of the world.
+antidispensercrash:
+  enabled: true
+  # Old 1.12 crash fix. Normal players use flint and steel dispensers, so it's off by default.
+  block-flint-and-steel: false
+  log-to-console: true
+
+# Items normal players can't place. The item gets deleted. Uses Bukkit material names.
+# Only the item itself is checked, so eyes of ender still go into end portal frames.
+antiblockplaces:
+  enabled: true
+  message: "&cYou can't place <block>!"
+  blocks:
+    - BEDROCK
+    - BARRIER
+    - END_PORTAL_FRAME
+    - COMMAND_BLOCK
+    - CHAIN_COMMAND_BLOCK
+    - REPEATING_COMMAND_BLOCK
+    - STRUCTURE_BLOCK
+    - STRUCTURE_VOID
+    - JIGSAW
+    - LIGHT
+    - REINFORCED_DEEPSLATE
+
+# When a normal player opens a hopper, overenchanted / overstacked items in
+# their inventory are deleted. Only the illegal items, nothing else.
+anti-illegals:
+  enabled: true
+  message: "&cRemoved &6<count> &cillegal item(s) from your inventory."
+
+# Cancels melee hits from a player holding an overenchanted weapon.
+# (The old version cancelled any hit over 40 damage, which broke maces.)
+32kpatch:
+  enabled: true
+
+# Right clicking a donkey/mule/llama with a chest drops its inventory and
+# removes the chest. This was for a 1.12 dupe that doesn't exist on 1.21,
+# and it wipes legit chest donkeys, so it's off by default.
+salc1-patch:
+  enabled: false
+  message: "&cPlacing chests on entities is disabled."
